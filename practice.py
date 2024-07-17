@@ -1,12 +1,7 @@
-def rate_exhibits(n):
-    return n % 2 == 0
+from datetime import datetime as dt
 
-
-# print(rate_exhibits("the sunset sets at twelve o' clock."))
-name = input()
-print(2 * 3 + (2 * 4 - 1) * 2 + 2 * (4 - 1) * 3)
-a = int(input())
-b = int(input())
-c = int(input())
-d = int(input())
-
+person = {"name": "TE", "age": 25}
+time = dt.now()
+print(dt.ctime(time))
+print(f"Birthday {person['name']:*^{10 if len(person["name"]) % 2 == 0 else 11}}: {time:%m.%d.%Y %H:%M}")
+print('abc'.split())
