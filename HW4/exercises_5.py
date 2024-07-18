@@ -1,5 +1,8 @@
 # from math import factorial
 
+"""
+Exercise 1
+"""
 # x = int(input("Enter x: "))
 # n = int(input("Enter n: "))
 
@@ -10,6 +13,9 @@
 # print(f"Cos(x) = {cos}")
 
 
+"""
+Exercise 2
+"""
 # n = 20
 # k = 2
 # count = 0
@@ -27,7 +33,9 @@
 
 # print(days_untill_n)
 
-
+"""
+Exercise 3
+"""
 # fib1 = fib2 = 1
 # n = int(input("Enter number of fib: "))
 
@@ -37,7 +45,9 @@
 #     fib1, fib2 = fib2, fib1 + fib2
 #     print(fib2, end=" ")
 
-
+"""
+Exercise 4
+"""
 # list_of_numbers = [1, 3, 10, 12, 3, 5, 6, 6, 50, -23, -23]
 # sum_of_nums = 0
 # max_num = list_of_numbers[0]
@@ -59,7 +69,9 @@
 #     if count > 1:
 #         print(f"Num: {i} : count: {count}")
 
-
+"""
+Exercise 5
+"""
 # n = int(input("Enter a number from 1 to 7: "))
 # sorted_list = [num for num in range(1, 8)]
 
@@ -76,7 +88,9 @@
 
 # print(f"Position: {mid}")
 
-
+"""
+Exercise 6
+"""
 # arr = [5, 6, 7, 1, 2, 3, 4]
 # start = 0
 # end = len(arr) - 1
