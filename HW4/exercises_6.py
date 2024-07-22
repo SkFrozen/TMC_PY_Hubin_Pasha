@@ -1,6 +1,7 @@
 """
 Exercise 1
 """
+
 # def bin_rec(numbers, start, end, val):
 # 	mid = (start + end) // 2
 # 	if numbers[mid] > val:
@@ -63,6 +64,8 @@ Exercise 4
 """
 Exercise 5
 """
+
+
 # def caesar_code(
 #     text, step=int(input("Enter step > 0 for encrypt or step < 0 for decrypt: "))
 # ):
@@ -96,6 +99,7 @@ Exercise 5
 
 # def decrypt_caesar(encrypted_text, step):
 #     return encrypt_caesar(encrypted_text, step)
+
 
 # print(caesar_code("Uwnajy, pfp yatn ijqf"))
 
@@ -167,6 +171,8 @@ Function for matrix display
 """
 Exercise 7
 """
+
+
 # def matr(m, n):
 #     from random import randint
 
@@ -175,7 +181,7 @@ Exercise 7
 #         a.append([0] * n)
 #     for i in range(m):
 #         for j in range(n):
-#             a[i][j] = randint(0, 1)
+#             a[i][j] = randint(0, 10)
 #     return a
 
 
@@ -201,11 +207,12 @@ Exercise 8
 """
 Exercise 9
 """
+
+
 # def matrix_sum(m, n):
 #     matrix = matr(m, n)
 #     matrix_sum = 0
-#     column_sums = [1] * len(matrix[0])
-#     print_matrix(matrix)
+#     column_sums = [0] * len(matrix[0])
 #     for i in matrix:
 #         for j, x in enumerate(i):
 #             matrix_sum += x
@@ -304,4 +311,3 @@ Exercise 14
 
 
 # print_matrix(next_column(4, 5))
-
