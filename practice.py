@@ -12,7 +12,7 @@ def measure_time(func):
         end_time = time()
         elapsed_time = end_time - start_time
         return (
-            f"{round(elapsed_time, 3)} seconds have passed since"
+            f"{round(elapsed_time, 3)} seconds have passed since "
             f'the function - "{func.__name__}" was called'
         )
 
@@ -52,8 +52,8 @@ def palindrome_filter(A: list) -> list:
     which are palindrome
     Returns a list of palindromes
     """
-    for i in range(100000):
-        for c in range(1000):
+    for i in range(5000):
+        for c in range(12000):
             pass
     return list(filter(lambda s: s == s[::-1], A))
 
@@ -68,7 +68,7 @@ def area_apartment(A: list) -> int:
     Return area apartment
     """
     return reduce(
-        lambda a, c: a + c, list(map(lambda x: x.get("length") * x.get("width"), rooms))
+        lambda a, c: a + c, list(map(lambda x: x.get("length") * x.get("width"), A))
     )
 
 
