@@ -8,7 +8,7 @@ def measure_time(func):
 
     def wrapper(*args):
         start_time = time()
-        func(*args)
+        print(func(*args))
         end_time = time()
         elapsed_time = end_time - start_time
         return (
