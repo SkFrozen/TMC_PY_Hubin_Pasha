@@ -29,4 +29,4 @@ def find_common_word(words: list):
         text_file.write(text_for_file)
 
 
-find_common_word(read_text("some_text.txt"))
+find_common_word(read_text("text.txt"))
