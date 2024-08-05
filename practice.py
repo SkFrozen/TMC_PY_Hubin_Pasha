@@ -141,9 +141,9 @@ from time import time
 
 
 # print(max(issimple(13195)))
-"""Turtle"""
-from math import pi, sin
-import turtle as tt
+# """Turtle"""
+# from math import pi, sin
+# import turtle as tt
 
 # angle = float(input("Enter a angle: "))
 # r = float(input("Enter a radius: "))
