@@ -11,7 +11,7 @@ def read_text(file_name: str) -> list:
         file_lines = text_file.readlines()
         for line in file_lines:
             list_line = line.strip(",.").split()
-            common_words = {item: list_line.count(item) for item in list_line}
+            common_words = {item: list_line.count(item) for item in set(list_line)}
             common_list.append(common_words)
     return common_list
 
@@ -29,4 +29,5 @@ def find_common_word(words: list):
         text_file.write(text_for_file)
 
 
-find_common_word(read_text("text.txt"))
+words = read_text("text.txt")
+find_common_word(words)

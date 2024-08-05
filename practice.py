@@ -183,3 +183,53 @@ from time import time
 #         tt.pendown()
 #         n += 1
 #         r += 15
+
+import contextlib
+
+testdict = {"value": 11, "name": "the answer"}
+
+
+class MyContext:
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
+        self.old_val = self.dictionary.get("value")
+
+    def __enter__(self) -> dict:
+        print("entered")
+        self.dictionary["value"] = 42
+        return self.dictionary
+
+    def __exit__(self, type_, value, traceback):
+        self.dictionary["value"] = self.old_val
+        print("exited")
+
+
+def time_func(func):
+    def wrapper(*args, **kwargs):
+        print("start")
+        print(func(*args))
+        print("stop")
+
+    return wrapper
+
+
+def make_power_func(power: int) -> int:
+    @time_func
+    def func(x):
+        return x**power
+
+    return func
+
+
+pow_3 = make_power_func(3)
+try:
+    print(1)
+    pow_3("10")
+except TypeError as error:
+    print(2)
+except RuntimeError as error:
+    print(3)
+else:
+    print(4)
+finally:
+    print(5)
