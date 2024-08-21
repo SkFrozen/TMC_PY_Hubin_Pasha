@@ -1,30 +1,90 @@
 class Bus:
 
-    def __check_empty_seats(self):
-        total_empty_seats = list(self.seats.values()).count(None)
-        if total_empty_seats == 0:
-            self.empty_seats = False
+    def __init__(self, max_seats: int, max_speed: int, passengers: list):
+        self.speed = 0
+        self.max_seats = max_seats
+        self.max_speed = max_speed
+        self.passengers = passengers
+        self.available = True
+        self.seats = {
+            seat: passengers[seat] if seat < len(passengers) else None
+            for seat in range(max_seats)
+        }
+
+    def __contains__(self, passenger):
+        try:
+            self.passengers.index(passenger)
+            return True
+        except ValueError as e:
+            return False
+
+    def __add__(self, passenger):
+        self.__check_available
+        if self.available:
+            for seat, taken in self.seats.items():
+                if not taken:
+                    self.seats[seat] = passenger
+                    self.passengers.append(passenger)
+                    break
         else:
-            self.empty_seats = True
+            print("There are no available seats")
 
-    def out_bus(self, amount):
-        for seat in range(1, amount + 1):
-            self.seats[seat] = None
+    def __sub__(self, passenger):
+        try:
+            index = self.passengers.index(passenger)
+            self.passengers.pop(index)
+            for seat, taken in self.seats.items():
+                if taken == passenger:
+                    self.seats[seat] = None
+                    break
+            print(f"{passenger} got out of the bus")
+        except ValueError as e:
+            print(f"{passenger} was not found")
 
-    def in_bus(self, passengers):
-        count = 0
-        for seat, empty in self.seats.items():
-            self.__check_empty_seats()
-            if self.empty_seats:
-                if not empty and count < len(passengers):
-                    self.seats[seat] = passengers[count]
-                    count += 1
-                    print(self.seats)
+    def __check_available(self):
+        total_available = list(self.seats.values()).count(None)
+        if total_available == 0:
+            self.available = False
+        else:
+            self.available = True
+
+    def out_bus(self, amount: int):
+        if self.passengers:
+            for seat in range(amount):
+                self.seats[seat] = None
+                self.passengers.pop(seat)
+        else:
+            print("There are no passengers")
+
+    def in_bus(self, passengers: list):
+        for passenger in range(len(passengers)):
+            self.__check_available()
+            if self.available:
+                for seat, taken in self.seats.items():
+                    if not taken:
+                        self.seats[seat] = passengers[passenger]
+                        self.passengers.append(passengers[passenger])
+                        break
             else:
-                print(f"There are no empty seats for {passengers[count:]}")
+                print(f"There are no availble seats for {passengers[passenger:]}")
+                break
+
+    def increase_speed(self, amount):
+        self.speed = (
+            self.max_speed
+            if self.speed + amount > self.max_speed
+            else self.speed + amount
+        )
+
+    def decrease_speed(self, amount):
+        self.speed = 0 if self.speed - amount < 0 else self.speed - amount
 
 
-seats = {seat: None for seat in range(1, 6)}
-gaz = Bus(40, 5, 100, ["Tito", "Purchitta", "Monseno", "Kegren"], seats)
+gaz = Bus(10, 100, ["Yabusido", "Petrov", "Kiroma", "Levito", "Pancheto"])
+gaz.increase_speed(50)
+gaz.decrease_speed(28)
+print(gaz.speed)
+gaz - "Kiroma"
+gaz + "Petrova"
 print(gaz.seats)
-gaz.in_bus(["Ponto", "Gertemo", "Setiko"])
+print(gaz.passengers)
