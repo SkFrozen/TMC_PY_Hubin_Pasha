@@ -1,39 +1,4 @@
-from abc import ABC, abstractmethod
-
-
-class Builder(ABC):
-
-    @property
-    @abstractmethod
-    def pizza(self):
-        pass
-
-    @abstractmethod
-    def add_size(self):
-        pass
-
-    @abstractmethod
-    def add_cheese(self):
-        pass
-
-    @abstractmethod
-    def add_pepperoni(self):
-        pass
-
-    @abstractmethod
-    def add_mushrooms(self):
-        pass
-
-    @abstractmethod
-    def add_onions(self):
-        pass
-
-    @abstractmethod
-    def add_bacon(self):
-        pass
-
-
-class PizzaBuilder(Builder):
+class PizzaBuilder():
 
     def __init__(self):
         self.reset()
