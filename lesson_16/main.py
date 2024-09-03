@@ -6,5 +6,5 @@ from models.providers import Provider
 
 metadata = Base.metadata
 
-if __name__ == "__main__":
-    metadata.create_all(engine)
+# if __name__ == "__main__":
+#     metadata.create_all(engine)
