@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -12,5 +12,3 @@ class Provider(Base):
     last_name = Column(String)
     email = Column(String)
     company_name = Column(String)
-    good_num = Column(Integer, ForeignKey("good.number"))
-    goods = relationship("Good", back_populates="provider")
