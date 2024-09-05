@@ -33,11 +33,9 @@ session_pool = sessionmaker(bind=engine2)
 
 with session_pool() as session:
     try:
-        # add_category(session)
-        # add_provider(session)
-        # add_good(session)
-        # get_info_category(session)
-        search_good(session)
+        add_category(session)
+        add_provider(session)
+        add_good(session)
         session.commit()
     except Exception as e:
         session.rollback()
