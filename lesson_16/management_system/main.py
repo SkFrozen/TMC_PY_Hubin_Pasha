@@ -1,4 +1,4 @@
-from models.base import Base, engine
+from models.base import Base, engine, engine2
 from models.categories import Category
 from models.goods import Good
 from models.orders import Order
@@ -29,7 +29,7 @@ from views.warehouse import get_info_warehouse, search_goods_by_category
 
 metadata = Base.metadata
 
-session_pool = sessionmaker(bind=engine)
+session_pool = sessionmaker(bind=engine2)
 
 with session_pool() as session:
     try:
@@ -43,4 +43,4 @@ with session_pool() as session:
         session.rollback()
         raise ValueError("Query has been canceled, enter the correct info")
 # if __name__ == "__main__":
-#     metadata.create_all(engine)
+#     metadata.create_all(engine2)
