@@ -29,5 +29,35 @@ def update_provider(session):
 
 
 def delete_provider(session):
-    name = input("Enter a last name to delete: ")
-    session.query(Provider).filter_by(name=name).delete(synchronize_session="fetch")
+    number = int(input("Enter the provider number: "))
+    session.query(Provider).filter_by(number=number).delete()
+
+
+def get_info_provider(session):
+    name = input("Enter a provider last name: ")
+    provider = session.query(Provider).filter(Provider.last_name == name).first()
+    if provider:
+        print(
+            f"number: {provider.number}\
+        \nfirst name: {provider.first_name}\
+        \nlast_name: {provider.last_name}\
+        \nemail: {provider.email}\
+        \ncompany name: {provider.company_name}"
+        )
+    else:
+        print(f"The {name} was not found")
+
+
+def search_provider(session):
+    name = input("Enter part of the name: ")
+    providers = (
+        session.query(Provider).filter(Provider.first_name.ilike(f"{name}%")).all()
+    )
+    for provider in providers:
+        print(
+            f"number: {provider.number}\
+            \nfirst name: {provider.first_name}\
+            \nlast_name: {provider.last_name}\
+            \nemail: {provider.email}\
+            \ncompany name: {provider.company_name}"
+        )

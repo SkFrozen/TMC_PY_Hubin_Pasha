@@ -22,8 +22,8 @@ def add_good(session):
 
 
 def delete_good(session):
-    name = input("Enter a good name to delete: ")
-    session.query(Good).filter_by(name=name).delete(synchronize_session="fetch")
+    number = int(input("Enter the good number: "))
+    session.query(Good).filter_by(number=number).delete(synchronize_session="fetch")
 
 
 def update_good(session):
@@ -40,6 +40,16 @@ def update_good(session):
 
 def get_info_good(session):
     name = input("Enter a good name: ")
-
     good = session.query(Good).filter(Good.name == name).first()
-    print(good)
+    if good:
+        print(good)
+    else:
+        print(f"The {name} was not found")
+
+
+def search_good(session):
+    name = input("Enter part of the name: ")
+    goods = session.query(Good).filter(Good.name.ilike(f"{name}%")).all()
+    for good in goods:
+        print(good)
+        print("-" * 20)
