@@ -5,7 +5,6 @@ from models.goods import Good
 from models.orders import Order
 from models.providers import Provider
 from sqlalchemy.orm import sessionmaker
-from views.goods import add_good, delete_good, get_info_good
 
 metadata = Base.metadata
 
@@ -34,39 +33,26 @@ def get_providers():
 def get_goods():
     if request.method == "POST":
         with session_pool() as session:
-            good = get_info_good(session, request.json.get("id"))
-            provider = (
-                session.query(Provider).filter(Provider.id == good.provider_num).first()
-            )
-            category = (
-                session.query(Category).filter(Category.id == good.category_num).first()
-            )
-            json = jsonify(
-                {
-                    "id": good.id,
-                    "name": good.name,
-                    "cost": good.cost,
-                    "provider": provider.company_name,
-                    "category": category.name,
-                }
-            )
+            json_data = Good.get_info(id=request.json.get("id"), session=session)
+            json = jsonify(json_data)
             return json
-    with session_pool() as session:
-        goods = (
-            session.query(Good, Provider.company_name, Category.name)
-            .filter(Good.provider_num == Provider.id)
-            .filter(Good.category_num == Category.id)
-            .all()
+    else:
+        with session_pool() as session:
+            goods = (
+                session.query(Good, Provider.company_name, Category.name)
+                .filter(Good.provider_num == Provider.id)
+                .filter(Good.category_num == Category.id)
+                .all()
+            )
+            providers = session.query(Provider.company_name).all()
+            categories = session.query(Category.name).all()
+        return render_template(
+            "goods.html",
+            goods=goods,
+            route="goods",
+            providers=providers,
+            categories=categories,
         )
-        providers = session.query(Provider.company_name).all()
-        categories = session.query(Category.name).all()
-    return render_template(
-        "goods.html",
-        goods=goods,
-        route="goods",
-        providers=providers,
-        categories=categories,
-    )
 
 
 @app.route("/goods/add", methods=["POST"])
@@ -74,15 +60,16 @@ def add_goods():
     if request.method == "POST":
         try:
             with session_pool() as session:
-                add_good(
-                    session,
+                Good.create(
                     name=request.form["name"],
                     cost=request.form["cost"],
                     provider=request.form["provider"],
                     category=request.form["category"],
+                    session=session,
                 )
                 session.commit()
         except Exception as e:
+            print(e)
             return render_template("errors.html", e=e)
     return redirect("/goods")
 
@@ -91,22 +78,13 @@ def add_goods():
 def update_goods():
     if request.method == "POST":
         with session_pool() as session:
-            print(request.form["good_id"])
-            provider = (
-                session.query(Provider)
-                .filter_by(company_name=request.form["provider"])
-                .first()
-            )
-            category = (
-                session.query(Category).filter_by(name=request.form["category"]).first()
-            )
-            session.query(Good).filter_by(id=request.form["good_id"]).update(
-                {
-                    "name": request.form["name"],
-                    "cost": request.form["cost"],
-                    "provider_num": provider.id,
-                    "category_num": category.id,
-                }
+            good = Good.get_good_by_id(id=request.form.get("good_id"), session=session)
+            good.update(
+                name=request.form.get("name"),
+                cost=request.form.get("cost"),
+                provider=request.form.get("provider"),
+                category=request.form.get("category"),
+                session=session,
             )
             session.commit()
             return redirect("/goods")
@@ -116,9 +94,11 @@ def update_goods():
 def delete_goods(id_g):
     with session_pool() as session:
         try:
-            delete_good(session, id_g)
+            good = Good.get_good_by_id(id=id_g, session=session)
+            good.delete(id=id_g, session=session)
             session.commit()
         except Exception as e:
+            print(e)
             return redirect("/orders")
     return redirect("/goods")
 
