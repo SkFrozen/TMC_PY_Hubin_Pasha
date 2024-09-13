@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Inventory management</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+	<div class="popup">
+		<div class="header">
+			{% include'header.html' %}
+			<include src="header.html"></include>
+		</div>
+		<div class="main_table">
+			<table class="main_table_goods">
+				<thead>
+					<tr>
+						<th>
+							Name
+						</th>
+						<th>
+							Cost
+						</th>
+						<th>
+							Provider
+						</th>
+						<th>
+							Category
+						</th>
+						<th>
+							Action
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for good in goods %}
+					<tr>
+						<td>{{ good[0].name }}</td>
+						<td>{{ good[0].cost }}</td>
+						<td>{{ good[1]}}</td>
+						<td>{{ good[2] }}</td>
+						<td id="action">
+							<a href="/goods/delete/{{good[0].id}}">Delete</a>
+							<button class="btn_good" onclick="showPopup()" value="{{good[0].id}}">
+								update
+							</button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div id="popup-overlay">
+			<div id="popup">
+				<div class="popup_form">
+					<form action="/goods/update" , method="post">
+						<div class="popup_form_item">
+							<label for="name">
+								Name
+							</label>
+							<input type="text" name="name" id="popup_name">
+						</div>
+						<div class="popup_form_item">
+							<label for="cost">
+								Cost
+							</label>
+							<input type="text" name="cost" id="popup_cost">
+						</div>
+						<div class="popup_form_item">
+							<select name="provider" id="popup_provider">
+								{%for provider in providers%}
+								<option value="{{provider.company_name}}">
+									{{provider.company_name}}
+								</option>
+								{%endfor%}
+							</select>
+						</div>
+						<div class="popup_form_item">
+							<select name="category" id="popup_category">
+								{%for category in categories%}
+								<option value="{{category.name}}">
+									{{category.name}}
+								</option>
+								{%endfor%}
+							</select>
+						</div>
+						<div class="popup_form_item" style="display: none;">
+							<label for="cost">
+								Cost
+							</label>
+							<input type="text" name="good_id" id="popup_id">
+						</div>
+						<div class="popup_form_item">
+							<input id="submit" type="submit" value="Update product">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="main_form">
+			<form action="/goods/add" method="post">
+				<div class="main_form_item">
+					<label for="name">
+						Name
+					</label>
+					<input type="text" name="name" id="">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Cost
+					</label>
+					<input type="text" name="cost" id="">
+				</div>
+				<div class="main_form_item">
+					<select name="provider" id="">
+						{%for provider in providers%}
+						<option value="{{provider.company_name}}">
+							{{provider.company_name}}
+						</option>
+						{%endfor%}
+					</select>
+				</div>
+				<div class="main_form_item">
+					<select name="category" id="">
+						{%for category in categories%}
+						<option value="{{category.name}}">
+							{{category.name}}
+						</option>
+						{%endfor%}
+					</select>
+				</div>
+				<div class="main_form_item">
+					<input id="submit" type="submit" value="Add product">
+				</div>
+			</form>
+		</div>
+	</div>
+
+</body>
+<script src="{{url_for('static', filename='scripts/scripts.js')}}"></script>
+
+</html>

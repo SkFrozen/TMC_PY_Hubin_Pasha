@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Inventory management</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+	<div class="main">
+		<div class="header">
+			{% include'header.html' %}
+			<include src="header.html"></include>
+		</div>
+		<div class="main_errors">
+			<div class="main_errors_text">
+				{{e}}
+			</div>
+			<div class="main_erros_link">
+				<a href="/goods">Back to goods</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>

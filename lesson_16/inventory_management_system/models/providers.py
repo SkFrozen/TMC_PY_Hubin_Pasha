@@ -7,8 +7,8 @@ from .base import Base
 class Provider(Base):
     __tablename__ = "provider"
 
-    number = Column(Integer, primary_key=True)
-    first_name = Column(String)
-    last_name = Column(String)
-    email = Column(String)
-    company_name = Column(String)
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    company_name = Column(String, nullable=False)

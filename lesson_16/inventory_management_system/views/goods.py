@@ -3,12 +3,8 @@ from models.goods import Good
 from models.providers import Provider
 
 
-def add_good(session):
+def add_good(session, name: str, cost: float, provider: str, category: str):
 
-    name = input("Enter a good name: ")
-    cost = input("Enter a good cost: ")
-    provider = input("Enter a provider company name: ")
-    category = input("Enter a category: ")
     provider_num = session.query(Provider).filter_by(company_name=provider).first()
     category_num = session.query(Category).filter_by(name=category).first()
     session.add(
@@ -21,30 +17,18 @@ def add_good(session):
     )
 
 
-def delete_good(session):
-    number = int(input("Enter the good number: "))
-    session.query(Good).filter_by(number=number).delete(synchronize_session="fetch")
+def delete_good(session, id):
+    session.query(Good).filter_by(id=id).delete()
 
 
-def update_good(session):
-    good_name = input("Enter a name of good for update: ")
-    prop_update = input("What to change: 'name','cost', 'provider' or 'category'? ")
-    new_val = input("Enter a new value: ")
-    if prop_update == "provider":
-        prop_update = "provider_num"
-    elif prop_update == "category":
-        prop_update = "category_num"
+def update_good(session, name, cost, provider, category):
 
     session.query(Good).filter(Good.name == good_name).update({prop_update: new_val})
 
 
-def get_info_good(session):
-    name = input("Enter a good name: ")
-    good = session.query(Good).filter(Good.name == name).first()
-    if good:
-        print(good)
-    else:
-        print(f"The {name} was not found")
+def get_info_good(session, id):
+    good = session.query(Good).filter(Good.id == id).first()
+    return good
 
 
 def search_good(session):
