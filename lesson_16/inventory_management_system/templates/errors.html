@@ -18,7 +18,11 @@
 				{{e}}
 			</div>
 			<div class="main_erros_link">
-				<a href="/goods">Back to goods</a>
+				{%if route == '/goods'%}
+				<a href="/goods">Return to good</a>
+				{%elif route == "/providers"%}
+				<a href="/providers">Return to provider</a>
+				{%endif%}
 			</div>
 		</div>
 	</div>

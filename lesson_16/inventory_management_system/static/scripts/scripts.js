@@ -29,6 +29,30 @@ document.querySelectorAll(".btn_good").forEach(el =>
 		}
 	})
 );
+document.querySelectorAll(".btn_provider").forEach(el =>
+	el.addEventListener('click', async () => {
+		let obj = { 'id': el.value }
+		let response = await fetch('/providers', {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8"
+			},
+			body: JSON.stringify(obj)
+		});
+		let result = await response.json();
+		console.log(result)
+		let first_name = document.getElementById("popup_first_name")
+		let last_name = document.getElementById("popup_last_name")
+		let email = document.getElementById("popup_email")
+		let company_name = document.getElementById("popup_company_name")
+		let id = document.getElementById("popup_id")
+		first_name.value = result.first_name
+		last_name.value = result.last_name
+		email.value = result.email
+		company_name.value = result.company_name
+		id.setAttribute("value", result.id)
+	})
+);
 function showPopup() {
 	popupOverlay.style.display = "block";
 }

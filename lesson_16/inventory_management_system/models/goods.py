@@ -18,12 +18,12 @@ class Good(Base):
     provider = relationship("Provider")
 
     @classmethod
-    def create(
-        cls, name: str, cost: float, provider: str, category: str, session: object
-    ):
+    def add(cls, name: str, cost: float, provider: str, category: str, session: object):
         """Method recieves data about good, finds provider_id, category_id.
-        It connects to DB, creates and records godd
+        Requests to DB to add godd
         """
+        if name == "" or cost == "" or provider == "" or category == "":
+            raise ValueError("Error: an empty field is prohibited")
 
         provider_id = session.query(Provider).filter_by(company_name=provider).first()
         category_id = session.query(Category).filter_by(name=category).first()
@@ -34,7 +34,7 @@ class Good(Base):
 
     @classmethod
     def get_info(cls, id: int, session: object) -> dict:
-        """Method recieves id of the good, connects to the DB
+        """Method recieves id of the good,
         requests good, provider, category. Returns dict with data about good
         """
 
@@ -57,15 +57,18 @@ class Good(Base):
 
     @classmethod
     def get_good_by_id(cls, id: int, session: object) -> object:
-        """Method recieves object id, requestes object and returns it"""
+        """Method recieves object id, requests object and returns it"""
         good = session.query(Good).filter_by(id=id).first()
         return good
 
     def update(
         self, name: str, cost: float, provider: str, category: str, session: object
     ):
-        """Method recieves data about good, finds provider_id, category_id."""
-
+        """Method recieves data about good, requests provider, category.
+        Updates 'good' data
+        """
+        if name == "" or cost == "" or provider == "" or category == "":
+            raise ValueError("Error: an empty field is prohibited")
         provider = session.query(Provider).filter_by(company_name=provider).first()
         category = session.query(Category).filter_by(name=category).first()
         session.query(Good).filter_by(id=self.id).update(
@@ -77,5 +80,5 @@ class Good(Base):
             }
         )
 
-    def delete(self, id: int, session: object):
-        session.query(Good).filter_by(id=id).delete()
+    def delete(self, session: object):
+        session.query(Good).filter_by(id=self.id).delete()

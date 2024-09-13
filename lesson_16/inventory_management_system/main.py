@@ -22,11 +22,7 @@ def errors():
     return render_template("/errors.html")
 
 
-@app.route("/providers")
-def get_providers():
-    with session_pool() as session:
-        providers = session.query(Provider).all()
-    return render_template("providers.html", providers=providers, route="providers")
+"""START goods views"""
 
 
 @app.route("/goods", methods=["GET", "POST"])
@@ -56,11 +52,11 @@ def get_goods():
 
 
 @app.route("/goods/add", methods=["POST"])
-def add_goods():
+def add_good():
     if request.method == "POST":
         try:
             with session_pool() as session:
-                Good.create(
+                Good.add(
                     name=request.form["name"],
                     cost=request.form["cost"],
                     provider=request.form["provider"],
@@ -70,37 +66,108 @@ def add_goods():
                 session.commit()
         except Exception as e:
             print(e)
-            return render_template("errors.html", e=e)
+            return render_template("errors.html", e=e, route="/goods")
     return redirect("/goods")
 
 
 @app.route("/goods/update", methods=["POST"])
-def update_goods():
+def update_good():
     if request.method == "POST":
-        with session_pool() as session:
-            good = Good.get_good_by_id(id=request.form.get("good_id"), session=session)
-            good.update(
-                name=request.form.get("name"),
-                cost=request.form.get("cost"),
-                provider=request.form.get("provider"),
-                category=request.form.get("category"),
-                session=session,
-            )
-            session.commit()
+        try:
+            with session_pool() as session:
+                good = Good.get_good_by_id(
+                    id=request.form.get("good_id"), session=session
+                )
+                good.update(
+                    name=request.form.get("name"),
+                    cost=request.form.get("cost"),
+                    provider=request.form.get("provider"),
+                    category=request.form.get("category"),
+                    session=session,
+                )
+                session.commit()
             return redirect("/goods")
+        except ValueError as e:
+            return render_template("errors.html", e=e, route="/goods")
 
 
 @app.route("/goods/delete/<id_g>", methods=["GET"])
-def delete_goods(id_g):
+def delete_good(id_g):
     with session_pool() as session:
         try:
             good = Good.get_good_by_id(id=id_g, session=session)
-            good.delete(id=id_g, session=session)
+            good.delete(session=session)
             session.commit()
         except Exception as e:
             print(e)
             return redirect("/orders")
     return redirect("/goods")
+
+
+"""START providers views"""
+
+
+@app.route("/providers", methods=["GET", "POST"])
+def get_providers():
+    if request.method == "POST":
+        with session_pool() as session:
+            json_data = Provider.get_info(id=request.json.get("id"), session=session)
+            json = jsonify(json_data)
+            return json
+    else:
+        with session_pool() as session:
+            providers = session.query(Provider).all()
+
+        return render_template("providers.html", providers=providers, route="providers")
+
+
+@app.route("/providers/add", methods=["POST"])
+def add_provider():
+    if request.method == "POST":
+        try:
+            with session_pool() as session:
+                Provider.add(
+                    first_name=request.form.get("first_name"),
+                    last_name=request.form.get("last_name"),
+                    email=request.form.get("email"),
+                    company_name=request.form.get("company_name"),
+                    session=session,
+                )
+                session.commit()
+            return redirect("/providers")
+        except Exception as e:
+            print(e)
+            return render_template("errors.html", e=e, route="/providers")
+
+
+@app.route("/providers/update", methods=["POST"])
+def update_privder():
+    if request.method == "POST":
+        try:
+            with session_pool() as session:
+                provider = Provider.get_provider_by_id(
+                    id=request.form.get("provider_id"), session=session
+                )
+                provider.update(
+                    first_name=request.form.get("first_name"),
+                    last_name=request.form.get("last_name"),
+                    email=request.form.get("email"),
+                    company_name=request.form.get("company_name"),
+                    session=session,
+                )
+                session.commit()
+            return redirect("/providers")
+        except ValueError as e:
+            return render_template("errors.html", e=e, route="/providers")
+
+
+@app.route("/providers/delete/<id_p>", methods=["GET"])
+def delete_provider(id_p):
+    with session_pool() as session:
+        provider = Provider.get_provider_by_id(id=id_p, session=session)
+        provider.delete(session=session)
+        session.commit()
+    return redirect("/providers")
 
 
 @app.route("/orders", methods=["GET", "POST"])

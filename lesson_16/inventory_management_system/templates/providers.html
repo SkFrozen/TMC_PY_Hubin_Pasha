@@ -39,18 +39,86 @@
 					<td>{{ provider.email }}</td>
 					<td>{{ provider.company_name }}</td>
 					<td id="action">
-						<form action="goods">
-							<a href="#">delete</a>
-							<a href="#">update</a>
-						</form>
-
+						<a href="/providers/delete/{{provider.id}}">Delete</a>
+						<button class="btn_provider" onclick="showPopup()" value="{{provider.id}}">
+							update
+						</button>
 					</td>
 				</tr>
 				{% endfor %}
 			</table>
 		</div>
-	</div>
+		<div id="popup-overlay">
+			<div id="popup">
+				<div class="popup_form">
+					<form action="/providers/update" , method="post">
+						<div class="popup_form_item">
+							<label for="name">
+								First name
+							</label>
+							<input type="text" name="first_name" id="popup_first_name">
+						</div>
+						<div class="popup_form_item">
+							<label for="cost">
+								Last name
+							</label>
+							<input type="text" name="last_name" id="popup_last_name">
+						</div>
+						<div class="popup_form_item">
+							<label for="cost">
+								Email
+							</label>
+							<input type="text" name="email" id="popup_email">
+						</div>
+						<div class="popup_form_item">
+							<label for="cost">
+								Company name
+							</label>
+							<input type="text" name="company_name" id="popup_company_name">
+						</div>
+						<div class="popup_form_item" style="display: none;">
+							<input type="text" name="provider_id" id="popup_id">
+						</div>
+						<div class="popup_form_item">
+							<input id="submit" type="submit" value="Update provider">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="main_form">
+			<form action="/providers/add" , method="post">
+				<div class="main_form_item">
+					<label for="name">
+						First name
+					</label>
+					<input type="text" name="first_name">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Last name
+					</label>
+					<input type="text" name="last_name">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Email
+					</label>
+					<input type="text" name="email">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Company name
+					</label>
+					<input type="text" name="company_name">
+				</div>
+				<div class="main_form_item">
+					<input id="submit" type="submit" value="Add provider">
+				</div>
+			</form>
+		</div>
 
 </body>
+<script src="{{url_for('static', filename='scripts/scripts.js')}}"></script>
 
 </html>
