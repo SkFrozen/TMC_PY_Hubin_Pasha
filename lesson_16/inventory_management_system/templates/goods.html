@@ -69,6 +69,9 @@
 							<input type="text" name="cost" id="popup_cost">
 						</div>
 						<div class="popup_form_item">
+							<label for="provider">
+								Providers
+							</label>
 							<select name="provider" id="popup_provider">
 								{%for provider in providers%}
 								<option value="{{provider.company_name}}">
@@ -78,6 +81,9 @@
 							</select>
 						</div>
 						<div class="popup_form_item">
+							<label for="category">
+								Categories
+							</label>
 							<select name="category" id="popup_category">
 								{%for category in categories%}
 								<option value="{{category.name}}">
@@ -111,6 +117,9 @@
 					<input type="text" name="cost" id="">
 				</div>
 				<div class="main_form_item">
+					<label for="provider">
+						Providers
+					</label>
 					<select name="provider" id="">
 						{%for provider in providers%}
 						<option value="{{provider.company_name}}">
@@ -120,6 +129,9 @@
 					</select>
 				</div>
 				<div class="main_form_item">
+					<label for="category">
+						Categories
+					</label>
 					<select name="category" id="">
 						{%for category in categories%}
 						<option value="{{category.name}}">

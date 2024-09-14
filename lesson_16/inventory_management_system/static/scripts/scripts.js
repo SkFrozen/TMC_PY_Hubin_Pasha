@@ -1,6 +1,6 @@
 const popupOverlay = document.getElementById("popup-overlay");
 const popup = document.getElementById("popup")
-const btn_good = document.getElementsByClassName("btn_good")
+const popup_good = document.getElementById("popup_good")
 
 document.querySelectorAll(".btn_good").forEach(el =>
 	el.addEventListener('click', async () => {
@@ -29,6 +29,7 @@ document.querySelectorAll(".btn_good").forEach(el =>
 		}
 	})
 );
+
 document.querySelectorAll(".btn_provider").forEach(el =>
 	el.addEventListener('click', async () => {
 		let obj = { 'id': el.value }
@@ -40,7 +41,6 @@ document.querySelectorAll(".btn_provider").forEach(el =>
 			body: JSON.stringify(obj)
 		});
 		let result = await response.json();
-		console.log(result)
 		let first_name = document.getElementById("popup_first_name")
 		let last_name = document.getElementById("popup_last_name")
 		let email = document.getElementById("popup_email")
@@ -53,11 +53,45 @@ document.querySelectorAll(".btn_provider").forEach(el =>
 		id.setAttribute("value", result.id)
 	})
 );
+
+document.querySelectorAll(".btn_order").forEach(el =>
+	el.addEventListener('click', async () => {
+		let obj = { 'id': el.value }
+		let response = await fetch('/orders', {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8"
+			},
+			body: JSON.stringify(obj)
+		});
+		let result = await response.json();
+		let name = document.getElementById("popup_name")
+		let address = document.getElementById("popup_address")
+		let notes = document.getElementById("popup_notes")
+		let email = document.getElementById("popup_email")
+		let status = document.getElementById("popup_status")
+		let good = document.getElementById("popup_good")
+		let id = document.getElementById("popup_id")
+		name.value = result.name
+		address.value = result.address
+		notes.value = result.notes
+		email.value = result.email
+		status.value = result.status
+		if (good.querySelector(`option[value='${result.good_id}']`)) {
+			good.querySelector(`option[value='${result.good_id}']`).setAttribute("selected", "selected")
+		}
+		id.setAttribute("value", result.id)
+	})
+);
+
 function showPopup() {
 	popupOverlay.style.display = "block";
 }
 
 function hidePopup() {
+	if (popup_good) {
+		popup_good.querySelector("option[selected=selected]").removeAttribute("selected")
+	};
 	popupOverlay.style.display = "none";
 }
 

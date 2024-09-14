@@ -22,7 +22,7 @@ def errors():
     return render_template("/errors.html")
 
 
-"""START goods views"""
+"""START goods view"""
 
 
 @app.route("/goods", methods=["GET", "POST"])
@@ -104,7 +104,7 @@ def delete_good(id_g):
     return redirect("/goods")
 
 
-"""START providers views"""
+"""START providers view"""
 
 
 @app.route("/providers", methods=["GET", "POST"])
@@ -157,7 +157,7 @@ def update_privder():
                 )
                 session.commit()
             return redirect("/providers")
-        except ValueError as e:
+        except Exception as e:
             return render_template("errors.html", e=e, route="/providers")
 
 
@@ -170,14 +170,79 @@ def delete_provider(id_p):
     return redirect("/providers")
 
 
+"""START orders view"""
+
+
 @app.route("/orders", methods=["GET", "POST"])
 def get_orders():
+    if request.method == "POST":
+        with session_pool() as session:
+            json_data = Order.get_info(id=request.json.get("id"), session=session)
+            json = jsonify(json_data)
+            return json
+    else:
+        with session_pool() as session:
+            orders = (
+                session.query(Order, Good.name).filter(Order.good_num == Good.id).all()
+            )
+            goods = session.query(Good).all()
+        return render_template(
+            "orders.html", orders=orders, goods=goods, route="orders"
+        )
+
+
+@app.route("/orders/add", methods=["POST"])
+def add_order():
+    if request.method == "POST":
+        try:
+            with session_pool() as session:
+                Order.add(
+                    name=request.form.get("name"),
+                    address=request.form.get("address"),
+                    notes=request.form.get("notes"),
+                    email=request.form.get("email"),
+                    status=request.form.get("status"),
+                    good_id=request.form.get("good_id"),
+                    session=session,
+                )
+                session.commit()
+            return redirect("/orders")
+        except Exception as e:
+            return render_template("errors.html", e=e, route="/orders")
+
+
+@app.route("/orders/update", methods=["POST"])
+def update_order():
+    if request.method == "POST":
+        try:
+            with session_pool() as session:
+                order = Order.get_order_by_id(
+                    id=request.form.get("order_id"), session=session
+                )
+                order.update(
+                    name=request.form.get("name"),
+                    address=request.form.get("address"),
+                    notes=request.form.get("notes"),
+                    email=request.form.get("email"),
+                    status=request.form.get("status"),
+                    good_id=request.form.get("good"),
+                    session=session,
+                )
+                session.commit()
+            return redirect("/orders")
+        except Exception as e:
+            return render_template("errors.html", e=e, route="/orders")
+
+
+@app.route("/orders/delete/<o_id>", methods=["GET"])
+def delete_order(o_id):
     with session_pool() as session:
-        orders = session.query(Order, Good.name).filter(Order.good_num == Good.id).all()
-    return render_template("orders.html", orders=orders, route="orders")
+        order = Order.get_order_by_id(id=o_id, session=session)
+        order.delete(session=session)
+        session.commit()
+    return redirect("/orders")
 
 
 if __name__ == "__main__":
     # metadata.create_all(engine)
     app.run("localhost", 5000)
-    pass

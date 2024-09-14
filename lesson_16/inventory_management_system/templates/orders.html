@@ -29,7 +29,7 @@
 						Email
 					</th>
 					<th>
-						Provider email
+						Status
 					</th>
 					<th>
 						Good
@@ -44,18 +44,123 @@
 					<td>{{ order[0].address }}</td>
 					<td>{{ order[0].notes }}</td>
 					<td>{{ order[0].email }}</td>
-					<td>{{ order[1]}}</td>
-					<td>{{ order[2] }}</td>
+					<td>{{ order[0].status }}</td>
+					<td>{{ order[1] }}</td>
 					<td id="action">
-						<a href="#">delete</a>
-						<a href="#">update</a>
+						<a href="/orders/delete/{{order[0].id}}">delete</a>
+						<button class="btn_order" onclick="showPopup()" value="{{order[0].id}}">
+							update
+						</button>
 					</td>
 				</tr>
 				{% endfor %}
 			</table>
 		</div>
+		<div id="popup-overlay">
+			<div id="popup">
+				<div class="popup_form">
+					<form action="/orders/update" , method="post">
+						<div class="popup_form_item">
+							<label for="name">
+								Name
+							</label>
+							<input type="text" name="name" id="popup_name">
+						</div>
+						<div class="popup_form_item">
+							<label for="address">
+								Address
+							</label>
+							<input type="text" name="address" id="popup_address">
+						</div>
+						<div class="popup_form_item">
+							<label for="notes">
+								Notes
+							</label>
+							<input type="text" name="notes" id="popup_notes">
+						</div>
+						<div class="popup_form_item">
+							<label for="email">
+								Email
+							</label>
+							<input type="text" name="email" id="popup_email">
+						</div>
+						<div class="popup_form_item">
+							<label for="status">
+								Status
+							</label>
+							<input type="text" name="status" id="popup_status">
+						</div>
+						<div class="popup_form_item">
+							<label for="good">
+								Goods
+							</label>
+							<select name="good" id="popup_good">
+								{%for good in goods%}
+								<option value="{{good.id}}">
+									{{good.name}}
+								</option>
+								{%endfor%}
+							</select>
+						</div>
+						<div class="popup_form_item" style="display: none;">
+							<input type="text" name="order_id" id="popup_id">
+						</div>
+						<div class="popup_form_item">
+							<input id="submit" type="submit" value="Update order">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="main_form">
+			<form action="/orders/add" method="post">
+				<div class="main_form_item">
+					<label for="name">
+						Name
+					</label>
+					<input type="text" name="name" id="">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Address
+					</label>
+					<input type="text" name="address" id="">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Notes
+					</label>
+					<input type="text" name="notes" id="">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Email
+					</label>
+					<input type="text" name="email" id="">
+				</div>
+				<div class="main_form_item">
+					<label for="cost">
+						Status
+					</label>
+					<input type="text" name="status" id="">
+				</div>
+				<div class="main_form_item">
+					<select name="good_id" id="">
+						{%for good in goods%}
+						<option value="{{good.id}}">
+							{{good.name}}
+						</option>
+						{%endfor%}
+					</select>
+				</div>
+				<div class="main_form_item">
+					<input id="submit" type="submit" value="Add order">
+				</div>
+			</form>
+		</div>
 	</div>
 
 </body>
+<script src="{{url_for('static', filename='scripts/scripts.js')}}"></script>
 
 </html>

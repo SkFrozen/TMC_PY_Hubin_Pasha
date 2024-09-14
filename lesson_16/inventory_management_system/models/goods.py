@@ -19,8 +19,8 @@ class Good(Base):
 
     @classmethod
     def add(cls, name: str, cost: float, provider: str, category: str, session: object):
-        """Method recieves data about good, finds provider_id, category_id.
-        Requests to DB to add godd
+        """Method recieves data about good, requests provider, category
+        and adds godd
         """
         if name == "" or cost == "" or provider == "" or category == "":
             raise ValueError("Error: an empty field is prohibited")
