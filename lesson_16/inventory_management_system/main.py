@@ -14,7 +14,7 @@ session_pool = sessionmaker(bind=engine)
 
 @app.route("/home")
 def home():
-    return render_template("/index.html", route="home")
+    return render_template("index.html", route="home")
 
 
 @app.route("/errors")
@@ -65,7 +65,6 @@ def add_good():
                 )
                 session.commit()
         except Exception as e:
-            print(e)
             return render_template("errors.html", e=e, route="/goods")
     return redirect("/goods")
 
@@ -99,7 +98,6 @@ def delete_good(id_g):
             good.delete(session=session)
             session.commit()
         except Exception as e:
-            print(e)
             return redirect("/orders")
     return redirect("/goods")
 
@@ -136,7 +134,6 @@ def add_provider():
                 session.commit()
             return redirect("/providers")
         except Exception as e:
-            print(e)
             return render_template("errors.html", e=e, route="/providers")
 
 
@@ -241,6 +238,27 @@ def delete_order(o_id):
         order.delete(session=session)
         session.commit()
     return redirect("/orders")
+
+
+"""START categories view"""
+
+
+@app.route("/categories")
+def get_categories():
+    with session_pool() as session:
+        categories = session.query(Category).all()
+    return render_template("categories.html", categories=categories, route="category")
+
+
+@app.route("/category/delete/<c_id>")
+def delete_category(c_id):
+    try:
+        with session_pool() as session:
+            session.query(Category).filter_by(id=c_id).delete()
+            session.commit()
+        return redirect("/categories")
+    except Exception as e:
+        return render_template("errors.html", e=e, route="/categories")
 
 
 if __name__ == "__main__":

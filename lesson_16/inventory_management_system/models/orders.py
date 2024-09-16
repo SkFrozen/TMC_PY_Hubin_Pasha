@@ -29,10 +29,11 @@ class Order(Base):
         session: object,
     ):
         """Method recieves order data, session object. Requests good by id
-        and adds order
+        and adds order to DB
         """
         if name == "" or address == "" or email == "" or status == "":
             raise ValueError("Error: an empty field is prohibited")
+
         good = session.query(Good).filter_by(id=good_id).first()
         session.add(
             Order(
@@ -66,6 +67,7 @@ class Order(Base):
 
     @classmethod
     def get_order_by_id(cls, id: int, session: object) -> object:
+        """Method recieves object id, requests object and returns it"""
         order = session.query(Order).filter_by(id=id).first()
         return order
 

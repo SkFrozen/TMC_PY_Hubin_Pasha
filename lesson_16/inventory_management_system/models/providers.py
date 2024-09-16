@@ -22,8 +22,8 @@ class Provider(Base):
         company_name: str,
         session: object,
     ):
-        """Method recieves data about provider.
-        Requests to DB to add provider
+        """Method recieves provider data, session object.
+        Adds provider to DB
         """
         if first_name == "" or last_name == "" or email == "" or company_name == "":
             raise ValueError("Error: an empty field is prohibited")
@@ -46,10 +46,10 @@ class Provider(Base):
     @classmethod
     def get_info(cls, id: int, session: object) -> object:
         """Method recieves provider id, requests it.
-        Creates dictionary of provider data returns it.
+        Creates dictionary of the provider data and returns it.
         """
         provider = session.query(Provider).filter_by(id=id).first()
-        json_porvider = {
+        json_data = {
             "id": provider.id,
             "first_name": provider.first_name,
             "last_name": provider.last_name,
@@ -57,7 +57,7 @@ class Provider(Base):
             "company_name": provider.company_name,
         }
 
-        return json_porvider
+        return json_data
 
     def update(
         self,
@@ -67,7 +67,7 @@ class Provider(Base):
         company_name: str,
         session: object,
     ):
-        """Method recieves new data about provider and requests update it"""
+        """Method recieves new provider data and updates provider record"""
         if first_name == "" or last_name == "" or email == "" or company_name == "":
             raise ValueError("Error: an empty field is prohibited")
         session.query(Provider).filter_by(id=self.id).update(

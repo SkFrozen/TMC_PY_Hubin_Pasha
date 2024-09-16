@@ -20,7 +20,7 @@ class Good(Base):
     @classmethod
     def add(cls, name: str, cost: float, provider: str, category: str, session: object):
         """Method recieves data about good, requests provider, category
-        and adds godd
+        and adds good to DB
         """
         if name == "" or cost == "" or provider == "" or category == "":
             raise ValueError("Error: an empty field is prohibited")
@@ -34,8 +34,8 @@ class Good(Base):
 
     @classmethod
     def get_info(cls, id: int, session: object) -> dict:
-        """Method recieves id of the good,
-        requests good, provider, category. Returns dict with data about good
+        """Method recieves id of the good, requests good, provider, category.
+        Creates dictionary of the good and returns it.
         """
 
         good = session.query(Good).filter(Good.id == id).first()
@@ -45,7 +45,7 @@ class Good(Base):
         category = (
             session.query(Category).filter(Category.id == good.category_num).first()
         )
-        json_good = {
+        json_data = {
             "id": good.id,
             "name": good.name,
             "cost": good.cost,
@@ -53,7 +53,7 @@ class Good(Base):
             "category": category.name,
         }
 
-        return json_good
+        return json_data
 
     @classmethod
     def get_good_by_id(cls, id: int, session: object) -> object:
@@ -64,8 +64,8 @@ class Good(Base):
     def update(
         self, name: str, cost: float, provider: str, category: str, session: object
     ):
-        """Method recieves data about good, requests provider, category.
-        Updates 'good' data
+        """Method recieves new data about good, requests provider, category.
+        Updates good record
         """
         if name == "" or cost == "" or provider == "" or category == "":
             raise ValueError("Error: an empty field is prohibited")
