@@ -4,6 +4,7 @@ from models.categories import Category
 from models.goods import Good
 from models.orders import Order
 from models.providers import Provider
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 
 metadata = Base.metadata
@@ -12,9 +13,27 @@ app = Flask(__name__)
 session_pool = sessionmaker(bind=engine)
 
 
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def home():
-    return render_template("index.html", route="home")
+    with session_pool() as session:
+        categories = (
+            session.query(
+                Category.name,
+                func.count(Good.name),
+                func.sum(Good.cost),
+            )
+            .join(Good, Category.id == Good.category_num)
+            .group_by(Category.id)
+            .all()
+        )
+        orders = (
+            session.query(func.sum(Good.cost), func.count(Order.id))
+            .join(Order, Good.id == Order.good_num)
+            .all()
+        )
+    return render_template(
+        "index.html", route="home", categories=categories, orders=orders
+    )
 
 
 @app.route("/errors")
@@ -161,10 +180,13 @@ def update_privder():
 @app.route("/providers/delete/<id_p>", methods=["GET"])
 def delete_provider(id_p):
     with session_pool() as session:
-        provider = Provider.get_provider_by_id(id=id_p, session=session)
-        provider.delete(session=session)
-        session.commit()
-    return redirect("/providers")
+        try:
+            provider = Provider.get_provider_by_id(id=id_p, session=session)
+            provider.delete(session=session)
+            session.commit()
+            return redirect("/providers")
+        except Exception as e:
+            return render_template("errors.html", route="/providers", e=e)
 
 
 """START orders view"""
@@ -243,10 +265,19 @@ def delete_order(o_id):
 """START categories view"""
 
 
-@app.route("/categories")
+@app.route("/categories", methods=["GET", "POST"])
 def get_categories():
+    if request.method == "POST":
+        with session_pool() as session:
+            category = (
+                session.query(Category).filter_by(id=request.json.get("id")).first()
+            )
+
+            return jsonify({"id": category.id, "name": category.name})
+
     with session_pool() as session:
         categories = session.query(Category).all()
+
     return render_template("categories.html", categories=categories, route="category")
 
 
@@ -261,6 +292,33 @@ def delete_category(c_id):
         return render_template("errors.html", e=e, route="/categories")
 
 
+@app.route("/categories/update", methods=["GET", "POST"])
+def update_category():
+    if request.method == "POST":
+        with session_pool() as session:
+            category = (
+                session.query(Category)
+                .filter_by(id=request.form.get("category_id"))
+                .first()
+            )
+            category.name = request.form.get("name")
+            session.commit()
+        return redirect("/categories")
+
+
+@app.route("/categories/add", methods=["GET", "POST"])
+def add_category():
+    if request.method == "POST":
+        if request.form.get("name") != "":
+            with session_pool() as session:
+                session.add(Category(name=request.form.get("name")))
+                session.commit()
+            return redirect("/categories")
+        else:
+            error = "Error: an empty field is prohibited"
+            return render_template("errors.html", route="/categories", error=error)
+
+
 if __name__ == "__main__":
     # metadata.create_all(engine)
-    app.run("localhost", 5000)
+    app.run("localhost", 8000)

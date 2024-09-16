@@ -149,7 +149,7 @@
 					<select name="good_id" id="">
 						{%for good in goods%}
 						<option value="{{good.id}}">
-							{{good.name}}
+							{{good.name}}: {{good.cost}}$
 						</option>
 						{%endfor%}
 					</select>

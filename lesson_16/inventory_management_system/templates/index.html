@@ -13,7 +13,42 @@
 			{% include'header.html' %}
 			<include src="header.html"></include>
 		</div>
+		<div class="main_category">
+			<div class="main_category_header">
+				<span class="main_category_header_name">Category</span>
+				<span class="main_category_header_count">Total count goods</span>
+				<span class="main_category_header_sum">Total sum of goods</span>
+			</div>
+			<div class="main_category_body">
+				{%for category in categories%}
+				<div class="main_category_item">
+					<span class="main_category_item_name">{{category[0]}}</span>
+					<span class="main_category_item_count">{{category[1]}}</span>
+					<span class="main_category_item_sum">{{category[2]}}$</span>
+				</div>
+				{%endfor%}
+			</div>
+		</div>
+		<div class="main_orders">
+			<table class="main_table_orders">
+				<thead>
+					<tr>
+						<th>Total orders</th>
+						<th>Total sum of orders</th>
+					</tr>
+				</thead>
+				<tbody>
+					{%for order in orders%}
+					<tr>
+						<td>{{order[1]}}</td>
+						<td>{{order[0]}}$</td>
+					</tr>
+					{%endfor%}
+				</tbody>
+			</table>
 
+		</div>
+	</div>
 	</div>
 </body>
 

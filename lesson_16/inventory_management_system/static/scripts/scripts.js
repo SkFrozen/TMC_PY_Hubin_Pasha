@@ -84,6 +84,24 @@ document.querySelectorAll(".btn_order").forEach(el =>
 	})
 );
 
+document.querySelectorAll(".btn_category").forEach(el =>
+	el.addEventListener("click", async () => {
+		let obj = { "id": el.value }
+		let response = await fetch("/categories", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8"
+			},
+			body: JSON.stringify(obj)
+		});
+		let result = await response.json()
+		let id = document.getElementById("popup_id")
+		let name = document.getElementById("popup_name")
+		id.value = result.id
+		name.value = result.name
+	})
+);
+
 function showPopup() {
 	popupOverlay.style.display = "block";
 }
