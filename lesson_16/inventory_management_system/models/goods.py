@@ -1,3 +1,5 @@
+import re
+
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -22,8 +24,7 @@ class Good(Base):
         """Method recieves data about good, requests provider, category
         and adds good to DB
         """
-        if name == "" or cost == "" or provider == "" or category == "":
-            raise ValueError("Error: an empty field is prohibited")
+        cls.__validate_data(name, cost, provider, category)
 
         session.add(
             Good(name=name, cost=cost, provider_num=provider, category_num=category)
@@ -60,14 +61,22 @@ class Good(Base):
         good = session.query(Good).filter_by(id=id).first()
         return good
 
+    @staticmethod
+    def __validate_data(name, cost, provider, category):
+        if name == "" or cost == "" or provider == "" or category == "":
+            raise ValueError("Error: an empty field is prohibited")
+        elif re.search(r"[^\w ]", name):
+            raise ValueError("Name must be from a to z, 0 to 9 or with an underscore")
+        elif re.search(r"[^\d\.]", cost):
+            raise ValueError("Cost must be from 0 to 9 and separated by the '.'")
+
     def update(
         self, name: str, cost: float, provider: str, category: str, session: object
     ):
         """Method recieves new data about good, requests provider, category.
         Updates good record
         """
-        if name == "" or cost == "" or provider == "" or category == "":
-            raise ValueError("Error: an empty field is prohibited")
+        self.__validate_data(name, cost, provider, category)
         session.query(Good).filter_by(id=self.id).update(
             {
                 "name": name,

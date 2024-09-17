@@ -1,5 +1,6 @@
+import re
+
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 
 from .base import Base
 
@@ -25,8 +26,7 @@ class Provider(Base):
         """Method recieves provider data, session object.
         Adds provider to DB
         """
-        if first_name == "" or last_name == "" or email == "" or company_name == "":
-            raise ValueError("Error: an empty field is prohibited")
+        cls.__validate_data(first_name, last_name, email, company_name)
 
         session.add(
             Provider(
@@ -59,6 +59,15 @@ class Provider(Base):
 
         return json_data
 
+    @staticmethod
+    def __validate_data(first_name, last_name, email, company_name):
+        if first_name == "" or last_name == "" or email == "" or company_name == "":
+            raise ValueError("Error: an empty field is prohibited")
+        elif re.search(r"[^\w ]", first_name) or re.search(r"[^\w ]", last_name):
+            raise ValueError("Name must be from a to z, 0 to 9 or with an underscore")
+        elif not re.match(r"^[-\w\.]+@[-\w\.]+\.[-\w]+$", email):
+            raise ValueError("Email must contain 'a-z', 'A-Z', '0-9','@', '_.'")
+
     def update(
         self,
         first_name: str,
@@ -68,8 +77,7 @@ class Provider(Base):
         session: object,
     ):
         """Method recieves new provider data and updates provider record"""
-        if first_name == "" or last_name == "" or email == "" or company_name == "":
-            raise ValueError("Error: an empty field is prohibited")
+        self.__validate_data(first_name, last_name, email, company_name)
         session.query(Provider).filter_by(id=self.id).update(
             {
                 "first_name": first_name,

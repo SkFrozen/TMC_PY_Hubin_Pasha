@@ -1,3 +1,5 @@
+import re
+
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -31,8 +33,7 @@ class Order(Base):
         """Method recieves order data, session object. Requests good by id
         and adds order to DB
         """
-        if name == "" or address == "" or email == "" or status == "":
-            raise ValueError("Error: an empty field is prohibited")
+        cls.__validate_data(name, address, email, status)
 
         session.add(
             Order(
@@ -75,6 +76,13 @@ class Order(Base):
         order = session.query(Order).filter_by(id=id).first()
         return order
 
+    @staticmethod
+    def __validate_data(name, address, email, status):
+        if name == "" or address == "" or email == "" or status == "":
+            raise ValueError("Error: an empty field is prohibited")
+        elif not re.match(r"^[-\w\.]+@[-\w\.]+\.[-\w]+$", email):
+            raise ValueError("Email must contain 'a-z', 'A-Z', '0-9','@', '_.'")
+
     def update(
         self,
         name: str,
@@ -88,8 +96,7 @@ class Order(Base):
         """Method recieves new order data, requests good
         and updates order record
         """
-        if name == "" or address == "" or email == "" or status == "":
-            raise ValueError("Error: an empty field is prohibited")
+        self.__validate_data(name, address, email, status)
 
         session.query(Order).filter_by(id=self.id).update(
             {

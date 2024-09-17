@@ -180,10 +180,13 @@ def update_privder():
 @app.route("/providers/delete/<id_p>", methods=["GET"])
 def delete_provider(id_p):
     with session_pool() as session:
-        provider = Provider.get_provider_by_id(id=id_p, session=session)
-        provider.delete(session=session)
-        session.commit()
-    return redirect("/providers")
+        try:
+            provider = Provider.get_provider_by_id(id=id_p, session=session)
+            provider.delete(session=session)
+            session.commit()
+            return redirect("/providers")
+        except Exception as e:
+            return render_template("errors.html", route="/providers", e=e)
 
 
 """START orders view"""
@@ -318,4 +321,4 @@ def add_category():
 
 if __name__ == "__main__":
     # metadata.create_all(engine)
-    app.run("localhost", 5000)
+    app.run("localhost", 8000)
