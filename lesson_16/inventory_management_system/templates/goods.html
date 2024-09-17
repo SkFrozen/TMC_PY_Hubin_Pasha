@@ -75,7 +75,7 @@
 							</label>
 							<select name="provider" id="popup_provider">
 								{%for provider in providers%}
-								<option value="{{provider.company_name}}">
+								<option value="{{provider.id}}">
 									{{provider.company_name}}
 								</option>
 								{%endfor%}
@@ -87,7 +87,7 @@
 							</label>
 							<select name="category" id="popup_category">
 								{%for category in categories%}
-								<option value="{{category.name}}">
+								<option value="{{category.id}}">
 									{{category.name}}
 								</option>
 								{%endfor%}
@@ -124,7 +124,7 @@
 					</label>
 					<select name="provider" id="">
 						{%for provider in providers%}
-						<option value="{{provider.company_name}}">
+						<option value="{{provider.id}}">
 							{{provider.company_name}}
 						</option>
 						{%endfor%}
@@ -136,7 +136,7 @@
 					</label>
 					<select name="category" id="">
 						{%for category in categories%}
-						<option value="{{category.name}}">
+						<option value="{{category.id}}">
 							{{category.name}}
 						</option>
 						{%endfor%}

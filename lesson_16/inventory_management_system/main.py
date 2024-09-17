@@ -59,8 +59,8 @@ def get_goods():
                 .filter(Good.category_num == Category.id)
                 .all()
             )
-            providers = session.query(Provider.company_name).all()
-            categories = session.query(Category.name).all()
+            providers = session.query(Provider).all()
+            categories = session.query(Category).all()
         return render_template(
             "goods.html",
             goods=goods,

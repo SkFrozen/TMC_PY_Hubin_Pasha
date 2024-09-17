@@ -21,11 +21,11 @@ document.querySelectorAll(".btn_good").forEach(el =>
 		name.value = result.name
 		cost.value = result.cost
 		id.setAttribute("value", result.id)
-		if (provider.querySelector(`option[value='${result.provider}']`)) {
-			provider.value = result.provider
+		if (provider.querySelector(`option[value='${result.provider_id}']`)) {
+			provider.value = result.provider_id
 		}
-		if (category.querySelector(`option[value='${result.category}']`)) {
-			category.value = result.category
+		if (category.querySelector(`option[value='${result.category_id}']`)) {
+			category.value = result.category_id
 		}
 	})
 );

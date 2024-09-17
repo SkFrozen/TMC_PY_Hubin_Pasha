@@ -34,7 +34,6 @@ class Order(Base):
         if name == "" or address == "" or email == "" or status == "":
             raise ValueError("Error: an empty field is prohibited")
 
-        good = session.query(Good).filter_by(id=good_id).first()
         session.add(
             Order(
                 full_name=name,
@@ -42,7 +41,7 @@ class Order(Base):
                 notes=notes,
                 email=email,
                 status=status,
-                good=good,
+                good_num=good_id,
             )
         )
 
@@ -51,8 +50,13 @@ class Order(Base):
         """Method recieves order id, requests it.
         Creates dictionary of the order data and returns it.
         """
-        order = session.query(Order).filter_by(id=id).first()
-        good = session.query(Good).filter_by(id=order.good_num).first()
+        order = (
+            session.query(Order)
+            .filter_by(id=id)
+            .join(Good, Good.id == Order.good_num)
+            .first()
+        )
+
         json_data = {
             "id": order.id,
             "name": order.full_name,
@@ -60,8 +64,8 @@ class Order(Base):
             "notes": order.notes,
             "email": order.email,
             "status": order.status,
-            "good": good.name,
-            "good_id": good.id,
+            "good": order.good.name,
+            "good_id": order.good.id,
         }
         return json_data
 
@@ -87,7 +91,6 @@ class Order(Base):
         if name == "" or address == "" or email == "" or status == "":
             raise ValueError("Error: an empty field is prohibited")
 
-        good = session.query(Good).filter_by(id=good_id).first()
         session.query(Order).filter_by(id=self.id).update(
             {
                 "full_name": name,
@@ -95,7 +98,7 @@ class Order(Base):
                 "notes": notes,
                 "email": email,
                 "status": status,
-                "good_num": good.id,
+                "good_num": good_id,
             }
         )
 

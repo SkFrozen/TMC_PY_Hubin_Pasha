@@ -25,11 +25,8 @@ class Good(Base):
         if name == "" or cost == "" or provider == "" or category == "":
             raise ValueError("Error: an empty field is prohibited")
 
-        provider_id = session.query(Provider).filter_by(company_name=provider).first()
-        category_id = session.query(Category).filter_by(name=category).first()
-
         session.add(
-            Good(name=name, cost=cost, provider=provider_id, category=category_id)
+            Good(name=name, cost=cost, provider_num=provider, category_num=category)
         )
 
     @classmethod
@@ -38,19 +35,21 @@ class Good(Base):
         Creates dictionary of the good and returns it.
         """
 
-        good = session.query(Good).filter(Good.id == id).first()
-        provider = (
-            session.query(Provider).filter(Provider.id == good.provider_num).first()
-        )
-        category = (
-            session.query(Category).filter(Category.id == good.category_num).first()
+        good = (
+            session.query(Good)
+            .filter(Good.id == id)
+            .join(Category, Category.id == Good.category_num)
+            .join(Provider, Provider.id == Good.provider_num)
+            .first()
         )
         json_data = {
             "id": good.id,
             "name": good.name,
             "cost": good.cost,
-            "provider": provider.company_name,
-            "category": category.name,
+            "provider": good.provider.company_name,
+            "category": good.category.name,
+            "provider_id": good.provider.id,
+            "category_id": good.category.id,
         }
 
         return json_data
@@ -69,14 +68,12 @@ class Good(Base):
         """
         if name == "" or cost == "" or provider == "" or category == "":
             raise ValueError("Error: an empty field is prohibited")
-        provider = session.query(Provider).filter_by(company_name=provider).first()
-        category = session.query(Category).filter_by(name=category).first()
         session.query(Good).filter_by(id=self.id).update(
             {
                 "name": name,
                 "cost": cost,
-                "provider_num": provider.id,
-                "category_num": category.id,
+                "provider_num": provider,
+                "category_num": category,
             }
         )
 
