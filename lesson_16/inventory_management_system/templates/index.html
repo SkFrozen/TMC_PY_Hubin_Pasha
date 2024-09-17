@@ -24,7 +24,7 @@
 				<div class="main_category_item">
 					<span class="main_category_item_name">{{category[0]}}</span>
 					<span class="main_category_item_count">{{category[1]}}</span>
-					<span class="main_category_item_sum">{{category[2]}}$</span>
+					<span class="main_category_item_sum">{{category[2]|round(2)}}$</span>
 				</div>
 				{%endfor%}
 			</div>
@@ -41,7 +41,7 @@
 					{%for order in orders%}
 					<tr>
 						<td>{{order[1]}}</td>
-						<td>{{order[0]}}$</td>
+						<td>{{order[0]|round(2)}}$</td>
 					</tr>
 					{%endfor%}
 				</tbody>

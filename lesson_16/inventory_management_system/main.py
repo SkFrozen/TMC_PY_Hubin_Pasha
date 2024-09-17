@@ -31,6 +31,7 @@ def home():
             .join(Order, Good.id == Order.good_num)
             .all()
         )
+        print(categories)
     return render_template(
         "index.html", route="home", categories=categories, orders=orders
     )
