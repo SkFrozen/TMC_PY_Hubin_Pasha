@@ -13,7 +13,7 @@ app = Flask(__name__)
 session_pool = sessionmaker(bind=engine)
 
 
-@app.route("/home", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def home():
     with session_pool() as session:
         categories = (
@@ -32,7 +32,7 @@ def home():
             .all()
         )
     return render_template(
-        "index.html", route="home", categories=categories, orders=orders
+        "index.html", route="/", categories=categories, orders=orders
     )
 
 
