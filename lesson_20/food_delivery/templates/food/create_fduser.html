@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+<div>
+	<form action="{% url 'create_user' %}" method="post">
+		{% csrf_token %}
+		{{user_form}}
+		<div>
+			<input type="submit">
+		</div>
+	</form>
+</div>
+
+{% endblock%}

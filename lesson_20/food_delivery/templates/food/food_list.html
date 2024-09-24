@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+<div>
+	<table>
+		<thead>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Cost
+				</th>
+				<th>
+					Category
+				</th>
+				<th>
+					Edit
+				</th>
+				<th>
+					Delete
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for food in object_list %}
+			<tr>
+				<td>
+					{{ food.name }}
+				</td>
+				<td>
+					{{ food.cost }}
+				</td>
+				<td>
+					{{ food.category }}
+				</td>
+				<td>
+					<a href="{% url 'edit_food' food.id %}">Edit</a>
+				</td>
+				<td>
+					<a href="{% url 'delete_food' food.id %}">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div>
+		<a href="{% url 'create_food' %}">Create new food</a>
+	</div>
+</div>
+
+{% endblock %}

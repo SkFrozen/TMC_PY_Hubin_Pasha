@@ -1,0 +1,65 @@
+{% extends  'base.html' %}
+
+{% block container %}
+<div>
+	<table>
+		<thead>
+
+			<tr>
+				<th>
+					First name
+				</th>
+				<th>
+					Last name
+				</th>
+				<th>
+					Username
+				</th>
+				<th>
+					Email
+				</th>
+				<th>
+					Role
+				</th>
+				<th>
+					Edit
+				</th>
+				<th>
+					Delete
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in object_list %}
+			<tr>
+				<td>
+					{{user.first_name}}
+				</td>
+				<td>
+					{{user.last_name}}
+				</td>
+				<td>
+					{{user.username}}
+				</td>
+				<td>
+					{{user.email}}
+				</td>
+				<td>
+					{{user.role}}
+				</td>
+				<td>
+					<a href="{% url 'edit_user' user.id %}">Edit</a>
+				</td>
+				<td>
+					<a href="{% url 'delete_user' user.id %}">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div>
+		<a href="{% url 'create_user' %}">Create User</a>
+	</div>
+</div>
+
+{% endblock %}

@@ -5,6 +5,9 @@ from django.db import models
 class FDUser(User):
     role = models.CharField(max_length=30)
 
+    def __str__(self) -> str:
+        return f"ID: {self.pk}, Username: {self.username}, Last name: {self.last_name}"
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)

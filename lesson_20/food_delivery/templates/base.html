@@ -8,8 +8,17 @@
 </head>
 
 <body>
-	{% block content %}
-	{% endblock %}
+	<div class="header">
+		<ul>
+			<li><a href="{% url 'users' %}">Users</a></li>
+			<li><a href="{% url 'category' %}">Categories</a></li>
+			<li><a href="{% url 'food' %}">Foods</a></li>
+		</ul>
+	</div>
+	<div class="container">
+		{% block container %}
+		{% endblock %}
+	</div>
 
 </body>
 
