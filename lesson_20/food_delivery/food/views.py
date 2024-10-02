@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 
-from .forms import CategoryForm, CreateUserForm, EditUserForm, FoodForm
+from .forms import CategoryForm, FoodForm, UserChangeForm, UserCreationForm
 from .models import Category, FDUser, Food, Order
 
 """Category Views"""
@@ -15,14 +17,13 @@ def category(request):
 
 
 def edit_category(request, id):
+    category = Category.objects.get(id=id)
     if request.method == "GET":
-        category = Category.objects.get(id=id)
         cat_form = CategoryForm(instance=category)
         context = {"cat_form": cat_form, "id": category.id}
         return render(request, "edit_category.html", context)
     elif request.method == "POST":
-        edited_cat = Category.objects.get(id=id)
-        edited_cat.name = request.POST.get("name")
+        edited_cat = CategoryForm(request.POST, instance=category)
         edited_cat.save()
         return redirect("/food/category")
 
@@ -59,13 +60,13 @@ class EditFDUser(DetailView):
 
     def get(self, request, id):
         user = self.model.objects.get(id=id)
-        user_form = EditUserForm(instance=user)
+        user_form = UserChangeForm(instance=user)
         context = {"id": user.id, "user_form": user_form}
         return render(request, self.template_name, context)
 
     def post(self, request, id):
         user = self.model.objects.get(id=id)
-        user_form = EditUserForm(request.POST, instance=user)
+        user_form = UserChangeForm(request.POST, instance=user)
         if user_form.is_valid():
             user_form.save()
             return redirect("/food/users")
@@ -78,12 +79,12 @@ class CreateFDUser(DetailView):
     template_name = "create_fduser.html"
 
     def get(self, request):
-        user_form = CreateUserForm()
+        user_form = UserCreationForm()
         context = {"user_form": user_form}
         return render(request, self.template_name, context)
 
     def post(self, request):
-        user_form = CreateUserForm(request.POST)
+        user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             user_form.save()
             return redirect("/food/users")
@@ -146,3 +147,37 @@ def delete_food(request, id):
     food = Food.objects.get(id=id)
     food.delete()
     return redirect("/food")
+
+
+@login_required(login_url="/food/login")
+def home(request):
+    user = request.user
+    context = {"user": user}
+    return render(request, "home.html", context)
+
+
+class LoginPage(DetailView):
+
+    def get(self, request):
+        form = AuthenticationForm()
+        context = {"form": form}
+        return render(request, "login.html", context)
+
+    def post(self, request):
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = authenticate(
+                request,
+                username=form.cleaned_data.get("username"),
+                password=form.cleaned_data.get("password"),
+            )
+            if user is not None:
+                login(request, user)
+                return redirect("/food")
+        context = {"form": form}
+        return render(request, "login.html", context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("home")
