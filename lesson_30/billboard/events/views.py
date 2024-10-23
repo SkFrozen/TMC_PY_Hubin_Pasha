@@ -31,10 +31,6 @@ class EventUserAPIView(generics.ListAPIView):
     permission_classes = (IsOwner,)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        my_queryset = list()
-        for event in queryset:
-            if request.user in event.users.all():
-                my_queryset.append(event)
-        serializer = EventSerializer(my_queryset, many=True)
+        queryset = self.get_queryset().filter(users=request.user)
+        serializer = EventSerializer(queryset, many=True)
         return Response(serializer.data)
